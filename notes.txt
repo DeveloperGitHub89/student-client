@@ -1,0 +1,31 @@
+Navbar.jsx
+TopHeadlines.jsx -> 15 <NewsArticle></NewsArticle>
+AllNews.jsx -> 20 <NewsArticle></NewsArticle>
+NewsArticle.jsx -> 20 lines <Card></Card>
+Weather.jsx
+50 components
+
+Service:
+NewsService.js
+WeatherService.js
+
+try{
+	const response=await axios.get('http://www.newsapi.org/news/top-headlines');
+}
+catch(){
+}
+
+
+
+npm i react-bootstrap bootstrap axios react-router-dom react-router-bootstrap
+
+
+
+whenever there is a function that will be called to handle the event, then that function
+will always have one argument for the occured event object
+
+
+
+
+
+
