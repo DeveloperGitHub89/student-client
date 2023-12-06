@@ -1,11 +1,22 @@
-import { Button, Container, Table } from "react-bootstrap";
+import { Button, Container, Modal, Table } from "react-bootstrap";
 import { Header } from "./Header";
 import { useEffect, useState } from "react";
-import { fetchStudents } from "../services/StudentService";
+import { deleteStudent, fetchStudents } from "../services/StudentService";
+import { useNavigate } from "react-router-dom";
 
 export function StudentsList() {
 
     const [students, setStudents] = useState([]);
+    const [showDialog, setShowDialog] = useState(false);
+    const [selectedRoll,setSelectedRoll] = useState("");
+    const navigate = useNavigate();
+
+    const openModalDialog = () => {
+        setShowDialog(true);
+    }
+    const closeModalDialog = () => {
+        setShowDialog(false);
+    }
 
     async function populateStudentState() {
         try {
@@ -15,14 +26,25 @@ export function StudentsList() {
             console.log(error);
         }
     }
+
     useEffect(() => {
         populateStudentState();
     }, []);
 
+    const handleStudentDelete = async () => {
+        try {
+            await deleteStudent(selectedRoll);
+            populateStudentState();
+            closeModalDialog();
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     return (
         <Container>
             <Header text="List of all the students"></Header>
-            <Table className="mt-4">
+            {students.length !== 0 ? <Table className="mt-4">
                 <thead>
                     <tr>
                         <th>Roll</th>
@@ -34,7 +56,7 @@ export function StudentsList() {
                 </thead>
                 <tbody>
                     {
-                        students.map((s)=>{
+                        students.map((s) => {
                             return (
                                 <tr>
                                     <td>{s.roll}</td>
@@ -42,15 +64,37 @@ export function StudentsList() {
                                     <td>{s.marks}</td>
                                     <td>{s.gender}</td>
                                     <td>
-                                        <Button variant="danger">Delete</Button> &nbsp;&nbsp;&nbsp;
-                                        <Button variant="primary">Edit</Button>
+                                        <Button variant="danger" onClick={() => {
+                                            openModalDialog();
+                                            setSelectedRoll(s.roll);
+                                        }}>Delete</Button> &nbsp;&nbsp;&nbsp;
+                                        <Button variant="primary" onClick={()=>{
+                                            navigate(`/edit/${s.roll}`)
+                                        }}>Edit</Button>
                                     </td>
                                 </tr>
                             )
                         })
                     }
                 </tbody>
-            </Table>
+            </Table> : <p>No students found...!</p>}
+
+            <Modal show={showDialog} onHide={closeModalDialog}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Confirmation</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>Do you really want to delete student with roll {selectedRoll}?</Modal.Body>
+                <Modal.Footer>
+                    <Button variant="success" onClick={()=>{
+                        handleStudentDelete();
+                    }}>
+                        Yes
+                    </Button>
+                    <Button variant="danger" onClick={closeModalDialog}>
+                        No
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </Container>
     );
 }

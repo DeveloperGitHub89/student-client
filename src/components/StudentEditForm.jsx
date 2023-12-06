@@ -1,9 +1,11 @@
 import { Alert, Button, Col, Container, Form, Row } from "react-bootstrap";
 import { Header } from "./Header";
-import { useState } from "react";
-import { saveStudent } from "../services/StudentService";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { fetchStudentByRoll, updateStudent } from "../services/StudentService";
 
-export function StudentRegistrationForm() {
+export function StudentEditForm() {
+    const params=useParams();
     const [formData,setFormData]=useState({roll:"",name:"",marks:"",gender:""});
     const [isSubmitted,setIsSubmitted]=useState(false);
 
@@ -14,34 +16,41 @@ export function StudentRegistrationForm() {
     const handleSubmit=async(e)=>{
         e.preventDefault();
         try {
-           const result= await saveStudent(formData);
-           setFormData({roll:"",name:"",marks:"",gender:""});
-           setIsSubmitted(true);
-           setTimeout(()=>{
-            setIsSubmitted(false);
-           },1500);
-           console.log(result.message);
+           const result=await updateStudent(formData,params.roll);
+           console.log(result);
         } catch (error) {
             console.log(error);
         }
     }
 
+    const populateStudentState=async()=>{
+        try {
+            const result=await fetchStudentByRoll(params.roll);
+            setFormData(result.student);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffect(()=>{
+        populateStudentState();
+    },[]);
+
     return (
         <Container>
-            <Header text="Register student here"></Header>
-
-            <Form onSubmit={handleSubmit}>
+            <Header text="Update student here"></Header>
+            {formData?<Form onSubmit={handleSubmit}>
                 <Row>
                     <Col lg={4}>
                         <Form.Group className="mb-3">
                             <Form.Label>Roll</Form.Label>
-                            <Form.Control type="text" value={isSubmitted?formData.roll:null} placeholder="Enter roll" name="roll" onKeyUp={handleChange} />
+                            <Form.Control type="text" value={formData.roll} placeholder="Enter roll" name="roll" onChange={handleChange} />
                         </Form.Group>
                     </Col>
                     <Col lg={4}>
                         <Form.Group className="mb-3">
                             <Form.Label>Name</Form.Label>
-                            <Form.Control type="text" placeholder="Enter name" name="name" onKeyUp={handleChange} />
+                            <Form.Control type="text" value={formData.name} placeholder="Enter name" name="name" onChange={handleChange} />
                         </Form.Group>
                     </Col>
                 </Row>
@@ -49,7 +58,7 @@ export function StudentRegistrationForm() {
                     <Col lg={4}>
                         <Form.Group className="mb-3">
                             <Form.Label>Marks</Form.Label>
-                            <Form.Control type="text" placeholder="Enter marks" name="marks" onKeyUp={handleChange}/>
+                            <Form.Control type="text" value={formData.marks} placeholder="Enter marks" name="marks" onChange={handleChange}/>
                         </Form.Group>
                     </Col>
                     <Col lg={4}>
@@ -59,6 +68,7 @@ export function StudentRegistrationForm() {
                             name="gender"
                             value="male"
                             onChange={handleChange}
+                            checked={formData.gender==="male"?true:false}
                         />
                         <Form.Check
                             type="radio"
@@ -66,16 +76,18 @@ export function StudentRegistrationForm() {
                             name="gender"
                             value="female"
                             onChange={handleChange}
+                            checked={formData.gender==="female"?true:false}
                         />
                     </Col>
                 </Row>
                 <Row>
                     <Col lg={3}>
-                        <Button variant="primary" type="submit">Register</Button>
+                        <Button variant="primary" type="submit">Update</Button>
                     </Col>
                     
                 </Row>
-            </Form>
+            </Form>:<p>No data found for given roll no.</p>}
+            
             <Row className="mt-3">
                 <Col lg={4}>
                     {isSubmitted?<Alert variant="success">Student Registered</Alert>:null}
