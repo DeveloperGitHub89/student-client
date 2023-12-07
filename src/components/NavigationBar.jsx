@@ -9,7 +9,7 @@ export function NavigationBar() {
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
-                        <LinkContainer to="/">
+                        <LinkContainer to="/dashboard">
                             <Nav.Link>Dashboard</Nav.Link>
                         </LinkContainer>
                         <LinkContainer to="/students-list">

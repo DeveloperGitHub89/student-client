@@ -3,6 +3,7 @@ import { Header } from "./Header";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchStudentByRoll, updateStudent } from "../services/StudentService";
+import { NavigationBar } from "./NavigationBar";
 
 export function StudentEditForm() {
     const params=useParams();
@@ -37,6 +38,8 @@ export function StudentEditForm() {
     },[]);
 
     return (
+        <>
+        <NavigationBar/>
         <Container>
             <Header text="Update student here"></Header>
             {formData?<Form onSubmit={handleSubmit}>
@@ -94,5 +97,6 @@ export function StudentEditForm() {
                 </Col>
             </Row>
         </Container>
+        </>
     );
 }

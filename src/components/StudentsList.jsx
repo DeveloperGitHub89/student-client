@@ -3,6 +3,7 @@ import { Header } from "./Header";
 import { useEffect, useState } from "react";
 import { deleteStudent, fetchStudents } from "../services/StudentService";
 import { useNavigate } from "react-router-dom";
+import { NavigationBar } from "./NavigationBar";
 
 export function StudentsList() {
 
@@ -42,7 +43,10 @@ export function StudentsList() {
     }
 
     return (
+        <>
+        <NavigationBar/>
         <Container>
+            
             <Header text="List of all the students"></Header>
             {students.length !== 0 ? <Table className="mt-4">
                 <thead>
@@ -96,5 +100,6 @@ export function StudentsList() {
                 </Modal.Footer>
             </Modal>
         </Container>
+        </>
     );
 }

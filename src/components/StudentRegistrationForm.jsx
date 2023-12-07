@@ -2,6 +2,7 @@ import { Alert, Button, Col, Container, Form, Row } from "react-bootstrap";
 import { Header } from "./Header";
 import { useState } from "react";
 import { saveStudent } from "../services/StudentService";
+import { NavigationBar } from "./NavigationBar";
 
 export function StudentRegistrationForm() {
     const [formData,setFormData]=useState({roll:"",name:"",marks:"",gender:""});
@@ -27,6 +28,8 @@ export function StudentRegistrationForm() {
     }
 
     return (
+        <>
+        <NavigationBar/>
         <Container>
             <Header text="Register student here"></Header>
 
@@ -82,5 +85,6 @@ export function StudentRegistrationForm() {
                 </Col>
             </Row>
         </Container>
+        </>
     );
 }
