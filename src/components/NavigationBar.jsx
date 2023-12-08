@@ -1,7 +1,14 @@
-import { Container, Nav, Navbar } from "react-bootstrap";
+import { Button, Container, Nav, Navbar } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
+import { logout } from "../utils/TokenUtil";
+import { useNavigate } from "react-router-dom";
 
 export function NavigationBar() {
+    const navigate=useNavigate();
+    const handleLogoutClick=()=>{
+        logout();
+        navigate("/");
+    }
     return (
         <Navbar expand="lg" bg="dark" data-bs-theme="dark">
             <Container>
@@ -19,6 +26,7 @@ export function NavigationBar() {
                             <Nav.Link>Register Student</Nav.Link>
                         </LinkContainer>
                     </Nav>
+                    <Button variant="primary" size="sm" onClick={handleLogoutClick}>Logout</Button>
                 </Navbar.Collapse>
             </Container>
         </Navbar>
